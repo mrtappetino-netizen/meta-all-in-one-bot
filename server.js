@@ -78,16 +78,20 @@ async function aiReply(text, channel = 'generic') {
     const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
 
     try {
-      const r = await openai.chat.completions.create({
-        model: OPENAI_MODEL,
-        messages: [
-          { role: 'system', content: `Sei un assistente utile e conciso. Rispondi SEMPRE in italiano. Canale: ${channel}.` },
-          { role: 'user', content: text }
-        ],
-        temperature: 0.4,
-        max_tokens: 220,
-        signal: controller.signal
-      });
+     const r = await openai.chat.completions.create(
+  {
+    model: OPENAI_MODEL,
+    messages: [
+      { role: 'system', content: `Sei un assistente utile e conciso. Rispondi SEMPRE in italiano. Canale: ${channel}.` },
+      { role: 'user', content: text }
+    ],
+    temperature: 0.4,
+    max_tokens: 220
+  },
+  {
+    signal: controller.signal         // ✅ va nel 2° argomento (options)
+  }
+);
       clearTimeout(timer);
       const out = r.choices?.[0]?.message?.content?.trim();
       const finalText = out || 'Non ho capito, puoi riformulare?';
