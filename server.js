@@ -172,4 +172,24 @@ app.post('/whatsapp', async (req, res) => {
 
 // --- Avvio -------------------------------------------------------------------
 const PORT = process.env.PORT || 3000;
+// Test rapido AI dal browser
+app.get('/ai-test', async (req, res) => {
+  try {
+    if (!process.env.OPENAI_API_KEY) return res.status(500).send('OPENAI_API_KEY mancante');
+    const prompt = req.query.q || 'Di che colore è il cielo? Rispondi in una riga.';
+    const r = await openai.chat.completions.create({
+      model: OPENAI_MODEL,
+      messages: [
+        { role: 'system', content: 'Rispondi in italiano, in modo breve.' },
+        { role: 'user', content: String(prompt) }
+      ],
+      temperature: 0.5,
+      max_tokens: 60
+    });
+    res.status(200).send(r.choices?.[0]?.message?.content ?? '(vuoto)');
+  } catch (e) {
+    console.error('AI TEST error:', e?.response?.data || e.message);
+    res.status(500).send('AI TEST error: ' + (e?.response?.data?.error?.message || e.message));
+  }
+});
 app.listen(PORT, '0.0.0.0', () => console.log(`Server online :${PORT}`));
