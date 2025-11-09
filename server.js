@@ -176,7 +176,7 @@ const PORT = process.env.PORT || 3000;
 app.get('/ai-test', async (req, res) => {
   try {
     if (!process.env.OPENAI_API_KEY) return res.status(500).send('OPENAI_API_KEY mancante');
-    const prompt = req.query.q || 'Di che colore è il cielo? Rispondi in una riga.';
+    const prompt = req.query.q || 'Di che colore è il cielo?';
     const r = await openai.chat.completions.create({
       model: OPENAI_MODEL,
       messages: [
@@ -191,5 +191,6 @@ app.get('/ai-test', async (req, res) => {
     console.error('AI TEST error:', e?.response?.data || e.message);
     res.status(500).send('AI TEST error: ' + (e?.response?.data?.error?.message || e.message));
   }
+});
 });
 app.listen(PORT, '0.0.0.0', () => console.log(`Server online :${PORT}`));
