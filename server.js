@@ -51,4 +51,13 @@ app.post('/webhook', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
+app.get('/debug-verify', (req, res) => {
+  const vt = process.env.VERIFY_TOKEN || '';
+  const q = req.query?.['hub.verify_token'] || '';
+  res.status(200).json({
+    got_from_url: q,
+    expected_len: vt.length,
+    expected_preview: vt ? vt[0] + '...' + vt[vt.length-1] : '(vuoto)'
+  });
+});
 app.listen(PORT, '0.0.0.0', () => console.log(`ON :${PORT}`));
