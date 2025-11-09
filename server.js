@@ -30,3 +30,11 @@ app.get('/webhook', (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, '0.0.0.0', () => console.log(`ON :${PORT}`));
+// LOG TUTTO
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
+  next();
+});
+
+// Rotta di test manuale per i log
+app.get('/ping', (_req, res) => res.status(200).send('pong'));
