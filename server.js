@@ -139,14 +139,4 @@ app.post('/whatsapp', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.get('/debug-verify', (req, res) => {
-  const q = req.query || {};
-  const vt = process.env.VERIFY_TOKEN || '';
-  res.status(200).json({
-    got_mode: q['hub.mode'],
-    got_token: q['hub.verify_token'],
-    expected_token_len: vt.length,
-    expected_token_preview: vt ? vt[0] + '...' + vt[vt.length-1] : ''
-  });
-});
 app.listen(PORT, '0.0.0.0', () => console.log(`Server on :${PORT}`));
