@@ -38,3 +38,17 @@ app.use((req, res, next) => {
 
 // Rotta di test manuale per i log
 app.get('/ping', (_req, res) => res.status(200).send('pong'));
+import OpenAI from 'openai';
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const AI_MODEL = process.env.OPENAI_MODEL || 'gpt-4o-mini';
+async function aiReply(text) {
+  const r = await openai.chat.completions.create({
+    model: AI_MODEL,
+    messages: [
+      { role: 'system', content: 'Sei un assistente utile e conciso. Rispondi in italiano.' },
+      { role: 'user', content: text }
+    ],
+    temperature: 0.5, max_tokens: 300
+  });
+  return r.choices?.[0]?.message?.content?.trim() || 'Puoi ripetere?';
+}
